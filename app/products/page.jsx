@@ -8,14 +8,16 @@ import { date } from "yup";
 const Homepage = () => {
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState();
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [order, setorder] = useState("");
 
   const categories = ["all", "mobile", "laptop", "headphones", "smartwatch"];
 
   async function fetchProducts() {
     try {
-      const res = await fetch("/api/products");
+      const res = await fetch(
+        `/api/products?category=${selectedCategory}&order=${order}`
+      );
 
       if (!res.ok) {
         // Check if the response was successful
@@ -24,27 +26,27 @@ const Homepage = () => {
 
       const data = await res.json();
       setProducts(data);
-      setFiltered(data);
     } catch (error) {
       console.error("Failed to fetch products:", error);
     }
   }
-  useEffect(() => {
-    if (selectedCategory === "all") {
-      setFiltered(products);
-    }
-  }, []);
 
-  useEffect(() => {
-    if (selectedCategory === "all") {
-      setFiltered(products);
-    } else {
-      const filtered = products.filter(
-        (product) => selectedCategory === product.category
-      );
-      setFiltered(filtered);
-    }
-  }, [selectedCategory]);
+  // useEffect(() => {
+  //   if (selectedCategory === "all") {
+  //     setFiltered(products);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   if (selectedCategory === "all") {
+  //     setFiltered(products);
+  //   } else {
+  //     const filtered = products.filter(
+  //       (product) => selectedCategory === product.category
+  //     );
+  //     setFiltered(filtered);
+  //   }
+  // }, [selectedCategory]);
 
   const handledelete = async (id) => {
     try {
@@ -63,7 +65,7 @@ const Homepage = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [selectedCategory,order]);
 
   if (!products) {
     return (
@@ -84,14 +86,14 @@ const Homepage = () => {
     );
   }
 
-  const FinalPRoducts = [...filtered].sort((a, b) => {
-    if (order === "asc") {
-      return a.price - b.price;
-    } else {
-      return b.price - a.price;
-    }
-    return 0;
-  });
+  //  const FinalPRoducts = [...filtered].sort((a, b) => {
+  //   if (order === "asc") {
+  //     return a.price - b.price;
+  //   } else {
+  //     return b.price - a.price;
+  //   }
+  //   return 0;
+  // });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[gray]-50 to-gray-100 p-4 sm:p-8">
@@ -127,13 +129,14 @@ const Homepage = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        {FinalPRoducts.map((product) => (
+        {products.map((product) => (
           <div
             key={product._id}
             className="bg-white rounded-2xl border border-gray-100  hover:shadow-sm transition-all duration-300 flex flex-col"
           >
             <div className="w-full bg-[#FFFFFF] h-68 overflow-hidden rounded-t-2xl">
-              <Link href={`/products/${product._id}`}>
+              <Link href={`/products/description/${product._id}`}>
+              {/* /api/products?category=${selectedCategory}&order=${order} */}
                 {product.image && (
                   <img
                     src={product.image}

@@ -1,5 +1,6 @@
 import Connectdb from "@/lib/mongodb"
 import Product from "@/models/Product"
+import { NextResponse } from "next/server"
 
 
 export  async function DELETE(req,{params}) {
@@ -11,7 +12,7 @@ export  async function DELETE(req,{params}) {
 
   const deleteproducts=await Product.findByIdAndDelete(id)
   
-  return new Response(JSON.stringify(deleteproducts),{
+  return new  NextResponse.json(JSON.stringify(deleteproducts),{
     status:200,
     headers:{"Content-Type":"application/json"}
   })

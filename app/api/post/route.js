@@ -1,5 +1,6 @@
 import Connectdb from "@/lib/mongodb"
 import Product from "@/models/Product"
+import { NextResponse } from "next/server"
 
 export async function POST(req){
 
@@ -7,7 +8,7 @@ export async function POST(req){
     const data=await req.json()
 
     if(!data || !data.price){
-      return new Response("Name ad Price are required !",{status:400})
+      return new NextResponse("Name ad Price are required !",{status:400})
     }
 
     const product=new Product({
@@ -20,7 +21,7 @@ export async function POST(req){
 
     await product.save()
 
-    return new Response(JSON.stringify(product),{status:201})
+    return new NextResponse(JSON.stringify(product),{status:201})
 
 }
 

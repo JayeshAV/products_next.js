@@ -22,7 +22,7 @@ const AddProduct = () => {
       price: Yup.string().required("Price is Required !"),
       description: Yup.string().required("description is Required !"),
       category: Yup.string().required("category is Required !"),
-      image: Yup.string() || "",
+      image: Yup.string().required("imgage is reuired"),
     }),
 
     onSubmit: (values, { resetForm }) => {
